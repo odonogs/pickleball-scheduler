@@ -1,0 +1,6848 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<meta name="theme-color" content="#1976d2">
+
+<title>Pickleball Fair Scheduler</title>
+
+<style>
+
+/* =========================================================
+   MOBILE / SAMSUNG A56 VERSION
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #eef1f4;
+    margin: 0;
+    padding: 8px;
+    color: #222;
+    font-size: 16px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+h1 {
+    margin: 4px 0 8px;
+    font-size: 25px;
+}
+
+h2 {
+    font-size: 20px;
+    margin: 8px 0 12px;
+}
+
+h3 {
+    margin: 4px 0;
+    font-size: 18px;
+}
+
+p {
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   INPUTS / BUTTONS
+========================================================= */
+
+input,
+button,
+select {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    min-height: 46px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #aaa;
+    touch-action: manipulation;
+}
+
+input {
+    max-width: 100%;
+}
+
+button {
+    background: #1976d2;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(.98);
+}
+
+button:disabled {
+    opacity: .55;
+}
+
+button.green {
+    background: #198754;
+}
+
+button.orange {
+    background: #e88900;
+}
+
+button.red {
+    background: #c62828;
+}
+
+button.grey {
+    background: #555;
+}
+
+button.small-button {
+    font-size: 14px;
+    min-height: 42px;
+    padding: 8px 10px;
+}
+
+.full {
+    width: 100%;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section {
+    margin: 12px 0;
+    padding: 13px;
+    background: #f7f8fa;
+    border-radius: 9px;
+}
+
+.small {
+    font-size: 13px;
+    color: #666;
+}
+
+.info,
+.warning,
+.success {
+    padding: 10px;
+    border-radius: 7px;
+    margin: 10px 0;
+}
+
+.info {
+    background: #e7f1ff;
+    border: 1px solid #b6d4fe;
+}
+
+.warning {
+    background: #fff3cd;
+    border: 1px solid #ffe69c;
+}
+
+.success {
+    background: #d1e7dd;
+    border: 1px solid #a3cfbb;
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.settings label {
+    font-weight: bold;
+}
+
+.settings input {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+
+/* =========================================================
+   PLAYER DATABASE
+========================================================= */
+
+.database-search {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.database-list {
+    margin-top: 10px;
+}
+
+.database-player {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: white;
+
+    border: 1px solid #ddd;
+
+    padding: 9px;
+
+    margin: 6px 0;
+
+    border-radius: 8px;
+
+    gap: 8px;
+}
+
+.database-player-name {
+    font-weight: bold;
+    flex: 1;
+    overflow-wrap: anywhere;
+}
+
+.database-actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   CURRENT PLAYERS
+========================================================= */
+
+.player-list {
+    line-height: 2;
+}
+
+.player-tag {
+    display: inline-flex;
+    align-items: center;
+
+    background: white;
+
+    border: 1px solid #ddd;
+
+    padding: 5px 9px;
+
+    margin: 3px;
+
+    border-radius: 18px;
+}
+
+.remove-player {
+    color: #c62828;
+    font-weight: bold;
+    cursor: pointer;
+
+    margin-left: 7px;
+
+    padding: 2px 5px;
+
+    font-size: 20px;
+}
+
+.player-count {
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+
+/* =========================================================
+   ROUNDS
+========================================================= */
+
+.round {
+    margin: 10px 0;
+    padding: 12px;
+
+    border-radius: 9px;
+
+    border-left: 6px solid #aaa;
+}
+
+.round.completed {
+    background: #dff3e3;
+    border-left-color: #198754;
+}
+
+.round.current {
+    background: #fff3cd;
+    border-left-color: #e0a000;
+}
+
+.round.future {
+    background: #f1f3f5;
+    border-left-color: #777;
+}
+
+.round-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.court {
+    background: white;
+
+    padding: 11px;
+
+    margin: 8px 0;
+
+    border-radius: 7px;
+
+    border: 1px solid #ddd;
+}
+
+.team {
+    font-weight: bold;
+}
+
+.vs {
+    color: #777;
+    margin: 0 4px;
+}
+
+.bench {
+    background: white;
+
+    border: 1px solid #ddd;
+
+    padding: 9px;
+
+    margin-top: 8px;
+
+    border-radius: 6px;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+
+    background: white;
+
+    min-width: 620px;
+}
+
+th,
+td {
+    padding: 8px;
+
+    border: 1px solid #ddd;
+
+    text-align: left;
+
+    vertical-align: top;
+}
+
+th {
+    background: #eee;
+}
+
+
+/* =========================================================
+   DETAILS
+========================================================= */
+
+details {
+    background: white;
+
+    padding: 8px;
+
+    border-radius: 6px;
+
+    border: 1px solid #ddd;
+}
+
+details summary {
+    cursor: pointer;
+
+    font-weight: bold;
+
+    padding: 5px;
+}
+
+
+/* =========================================================
+   BOTTOM NAVIGATION
+========================================================= */
+
+.nav-buttons {
+
+    position: sticky;
+
+    bottom: 0;
+
+    background: rgba(255,255,255,.96);
+
+    padding: 8px 0;
+
+    margin-top: 10px;
+
+    z-index: 20;
+
+    border-top: 1px solid #ddd;
+}
+
+.nav-buttons .grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr 1fr;
+
+    gap: 6px;
+}
+
+
+/* =========================================================
+   MOBILE SCREEN
+========================================================= */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 5px;
+    }
+
+    .container {
+        padding: 9px;
+        border-radius: 8px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .settings {
+        grid-template-columns: 1fr;
+    }
+
+    .action-row {
+        grid-template-columns: 1fr;
+    }
+
+    input,
+    button {
+        width: 100%;
+    }
+
+    .database-player {
+        display: block;
+    }
+
+    .database-actions {
+        margin-top: 7px;
+    }
+
+    .database-actions button {
+        width: 100%;
+    }
+
+    .round-title {
+        display: block;
+    }
+
+    .round-title strong {
+        display: block;
+        margin-top: 4px;
+    }
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+
+    body {
+        background: white;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .container {
+        box-shadow: none;
+        max-width: none;
+    }
+
+    .round.future {
+        display: block;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>🏓 Pickleball Fair Scheduler</h1>
+
+<p class="small">
+Samsung A56 Mobile Version
+</p>
+
+
+<!-- =========================================================
+     PLAYER DATABASE
+========================================================= -->
+
+<div class="section no-print">
+
+<h2>👥 Player Database</h2>
+
+<p class="small">
+
+Saved players stay on this device.
+
+They can be added to future tournaments.
+
+</p>
+
+
+<input id="databaseSearch" class="database-search" type="search" placeholder="Search saved players..." autocomplete="off" oninput="renderPlayerDatabase()">
+
+
+<input id="newDatabasePlayer" class="full" type="text" placeholder="Enter new player name" autocomplete="off">
+
+
+<button class="full" onclick="addPlayerToDatabase()">
+
+    + Save New Player
+
+</button>
+
+
+<div id="databaseList" class="database-list">
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Ann Maree F
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Ann Maree F&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    0
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Barb F
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Barb F&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    1
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Bill G
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Bill G&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    2
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Bill W
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Bill W&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    3
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Boyd H
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Boyd H&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    4
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Brad C
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Brad C&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    5
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Bruce M
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Bruce M&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    6
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Carissa D
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Carissa D&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    7
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Carmel
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Carmel&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    8
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Carol B
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Carol B&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    9
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Cheryl T
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Cheryl T&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    10
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Chris B
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Chris B&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    11
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Christine
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Christine&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    12
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Danni N
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Danni N&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    13
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Darren M
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Darren M&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    14
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            David F
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;David F&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    15
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            David P
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;David P&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    16
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Dawn G
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Dawn G&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    17
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Dean F
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Dean F&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    18
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Deb
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Deb&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    19
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Dennis M
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Dennis M&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    20
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Diana D
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Diana D&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    21
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Flo C
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Flo C&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    22
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Gay T
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Gay T&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    23
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Ian H
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Ian H&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    24
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Janese B
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Janese B&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    25
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Jenny F
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Jenny F&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    26
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Jenny N
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Jenny N&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    27
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Jenny W
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Jenny W&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    28
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Jim G
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Jim G&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    29
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Joan G
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Joan G&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    30
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Julie N
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Julie N&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    31
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Kerry
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Kerry&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    32
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Kim R
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Kim R&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    33
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Kym D
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Kym D&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    34
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Lesley R
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Lesley R&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    35
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Linda
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Linda&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    36
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Lindy R
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Lindy R&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    37
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Lou
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Lou&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    38
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Louise D
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Louise D&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    39
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Lyn N
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Lyn N&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    40
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Lynelle (Shirl) H
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Lynelle (Shirl) H&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    41
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Lynne H
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Lynne H&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    42
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Lynne S
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Lynne S&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    43
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Maree M
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Maree M&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    44
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Marg Man
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Marg Man&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    45
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Marion R
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Marion R&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    46
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Maryette B
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Maryette B&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    47
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Michelle C
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Michelle C&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    48
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Natalie (Nellie) G
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Natalie (Nellie) G&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    49
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Neil B
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Neil B&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    50
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Olga
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Olga&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    51
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Pat G
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Pat G&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    52
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Paul L
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Paul L&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    53
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Peter
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Peter&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    54
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Robyn C
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Robyn C&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    55
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Robyn P
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Robyn P&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    56
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Robyn w
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Robyn w&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    57
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Roslyn H
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Roslyn H&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    58
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Sean O
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Sean O&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    59
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Shelly T
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Shelly T&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    60
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Sue Squire
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Sue Squire&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    61
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Suz C
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Suz C&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    62
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Tamara F
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Tamara F&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    63
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Vicky
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Vicky&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    64
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Wendy R
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Wendy R&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    65
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                
+
+                    <div class="database-player">
+
+                        <span class="database-player-name">
+
+                            Yvonne H
+
+                        </span>
+
+
+                        <div class="database-actions">
+
+                            
+                                <button class="small-button" onclick="addDatabasePlayerToTournament(
+                                        &quot;Yvonne H&quot;
+                                    )">
+
+                                    + Add
+
+                                </button>
+                                
+
+
+                            <button class="small-button red" onclick="deletePlayerFromDatabase(
+                                    66
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+</div>
+
+
+<!-- =========================================================
+     CURRENT PLAYERS
+========================================================= -->
+
+<div class="section no-print">
+
+<h2>🏓 Current Tournament Players</h2>
+
+
+<div id="players" class="player-list"><span class="small">No players selected.</span></div>
+
+
+<div id="playerCount" class="player-count"></div>
+
+
+<button class="full" onclick="clearTournamentPlayers()">
+
+    🧹 Clear All Tournament Players
+
+</button>
+
+
+<div class="info">
+
+<strong>Live changes:</strong>
+
+Completed rounds are never changed.
+
+Adding or removing a player rebuilds the current
+and future rounds.
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     SETTINGS
+========================================================= -->
+
+<div class="section no-print">
+
+<h2>⚙️ Schedule Settings</h2>
+
+
+<div class="settings">
+
+<label>
+
+Courts
+
+<input id="courts" type="number" value="2" min="1" inputmode="numeric">
+
+</label>
+
+
+<label>
+
+Initial Rounds
+
+<input id="rounds" type="number" value="5" min="1" inputmode="numeric">
+
+</label>
+
+</div>
+
+
+<div class="action-row">
+
+<button onclick="generateSchedule()">
+
+    Generate New Schedule
+
+</button>
+
+
+<button class="green" onclick="addExtraRounds()">
+
+    + Add Extra Rounds
+
+</button>
+
+</div>
+
+
+<button class="orange full" onclick="changeCourtCount()">
+
+    🔄 Apply Court Change
+
+</button>
+
+
+<p class="small">
+
+    During a tournament, changing the court number keeps all completed
+    rounds locked and rebuilds the current and future rounds using the
+    new number of courts. Players are rebalanced fairly between playing
+    and benching.
+
+</p>
+
+
+<input id="extraRounds" class="full" type="number" value="blank" min="1" inputmode="numeric" placeholder="Number of extra rounds">
+
+<div class="action-row" style="margin-top:8px;">
+
+<button class="red" onclick="removeUpcomingRounds()">
+
+    − Remove Upcoming Rounds
+
+</button>
+
+<input id="removeRounds" type="number" value="black" min="1" inputmode="numeric" placeholder="Number of rounds to remove">
+
+</div>
+
+<p class="small">
+    You can remove rounds from the end of the schedule at any time.
+    Completed rounds and the current round are never removed.
+</p>
+
+</div>
+
+
+<!-- =========================================================
+     STATUS
+========================================================= -->
+
+<div id="status"></div>
+<div id="autoSaveStatus" class="small" style="margin:6px 0 10px;color:#198754;font-weight:bold;">✓ Automatically saved 04:08 pm</div>
+
+
+<!-- =========================================================
+     STATISTICS
+========================================================= -->
+
+<div class="section">
+
+<h2>📊 Player Statistics</h2>
+
+<div id="stats"><span class="small">Add players to see statistics.</span></div>
+
+</div>
+
+
+<!-- =========================================================
+     ROUND CONTROL
+========================================================= -->
+
+<div class="section no-print">
+
+<h2>🎯 Round Control</h2>
+
+
+<div class="action-row">
+
+<button class="grey" onclick="previousRound()">
+
+    ← Previous
+
+</button>
+
+
+<button onclick="nextRound()">
+
+    Next Round →
+
+</button>
+
+</div>
+
+
+<button class="orange full" onclick="goToCurrentRound()">
+
+    Go To Current Round
+
+</button>
+
+</div>
+
+
+<!-- =========================================================
+     SCHEDULE
+========================================================= -->
+
+<div class="section">
+
+<h2>📅 Schedule</h2>
+
+<div id="schedule"><p class="small">No schedule created yet.</p></div>
+
+</div>
+
+
+<!-- =========================================================
+     EXPORT
+========================================================= -->
+
+<div class="section no-print">
+
+<h2>💾 Export / Backup</h2>
+
+
+<button class="full" onclick="exportCSV()">
+
+    📊 Export CSV
+
+</button>
+
+
+<button class="green full" onclick="printSchedule()">
+
+    🖨 Print / Save PDF
+
+</button>
+
+
+<button class="orange full" onclick="saveUpdatedHTML()">
+
+    💾 Save Updated HTML
+
+</button>
+
+<p class="small">
+    Saves a new HTML file containing your permanent Player Database and the current tournament state.
+    It also works after Start New Tournament, so you can create a clean blank master HTML file.
+</p>
+
+<button class="grey full" onclick="downloadBackup()">
+
+    💾 Backup Schedule
+
+</button>
+
+
+<label class="small" style="display:block;margin-top:10px">
+
+Restore backup:
+
+<input class="full" type="file" id="restoreFile" accept=".json,application/json" onchange="restoreBackup(event)">
+
+</label>
+
+</div>
+
+
+<!-- =========================================================
+     MANAGEMENT
+========================================================= -->
+
+<div class="section no-print">
+
+<h2>⚠️ Schedule Management</h2>
+
+
+<button class="orange full" onclick="undoLastRound()">
+
+    Undo Last Round
+
+</button>
+
+
+<button class="green full" onclick="startNewTournament()">
+
+    🆕 Start New Tournament
+
+</button>
+
+<p class="small">
+    Clears the current tournament, schedule and statistics but keeps your permanent Player Database.
+</p>
+
+
+<button class="red full" onclick="resetSchedule()">
+
+    Reset Schedule
+
+</button>
+
+</div>
+
+
+<!-- =========================================================
+     MOBILE NAVIGATION
+========================================================= -->
+
+<div class="nav-buttons no-print">
+
+<div class="grid">
+
+<button onclick="nextRound()">
+
+    Next Round →
+
+</button>
+
+
+<button onclick="goToCurrentRound()">
+
+    🎯 Current
+
+</button>
+
+
+<button onclick="document.getElementById('schedule')
+        .scrollIntoView({
+            behavior:'smooth'
+        })">
+
+    📅 Schedule
+
+</button>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<script type="application/json" id="embeddedState">{
+  "version": 6,
+  "players": [],
+  "playerDatabase": [
+    "Ann Maree F",
+    "Barb F",
+    "Bill G",
+    "Bill W",
+    "Boyd H",
+    "Brad C",
+    "Bruce M",
+    "Carissa D",
+    "Carmel",
+    "Carol B",
+    "Cheryl T",
+    "Chris B",
+    "Christine",
+    "Danni N",
+    "Darren M",
+    "David F",
+    "David P",
+    "Dawn G",
+    "Dean F",
+    "Deb",
+    "Dennis M",
+    "Diana D",
+    "Flo C",
+    "Gay T",
+    "Ian H",
+    "Janese B",
+    "Jenny F",
+    "Jenny N",
+    "Jenny W",
+    "Jim G",
+    "Joan G",
+    "Julie N",
+    "Kerry",
+    "Kim R",
+    "Kym D",
+    "Lesley R",
+    "Linda",
+    "Lindy R",
+    "Lou",
+    "Louise D",
+    "Lyn N",
+    "Lynelle (Shirl) H",
+    "Lynne H",
+    "Lynne S",
+    "Maree M",
+    "Marg Man",
+    "Marion R",
+    "Maryette B",
+    "Michelle C",
+    "Natalie (Nellie) G",
+    "Neil B",
+    "Olga",
+    "Pat G",
+    "Paul L",
+    "Peter",
+    "Robyn C",
+    "Robyn P",
+    "Robyn w",
+    "Roslyn H",
+    "Sean O",
+    "Shelly T",
+    "Sue Squire",
+    "Suz C",
+    "Tamara F",
+    "Vicky",
+    "Wendy R",
+    "Yvonne H"
+  ],
+  "schedule": [],
+  "currentRound": 1,
+  "playerJoinRound": {},
+  "courtCount": 1,
+  "savedAt": "2026-09-18T06:08:54.096Z"
+}</script>
+
+<script>
+
+/* =========================================================
+   GLOBAL DATA
+========================================================= */
+
+"use strict";
+
+
+let players = [];
+
+let playerDatabase = [];
+
+let schedule = [];
+
+let currentRound = 1;
+
+/*
+   Records the round each player joined the tournament.
+   Players present when a new schedule starts have join round 1.
+   A late arrival is given fairness credit for the rounds they missed,
+   so they do not jump ahead of players who arrived on time and have
+   already spent time on the bench.
+*/
+let playerJoinRound = {};
+
+/* Number of courts currently being used */
+let courtCount = 2;
+
+let storageAvailable = true;
+
+
+/* =========================================================
+   TEST PHONE STORAGE
+========================================================= */
+
+function testStorage() {
+
+    try {
+
+        const testKey =
+            "__pickleball_test__";
+
+
+        localStorage.setItem(
+            testKey,
+            "1"
+        );
+
+
+        localStorage.removeItem(
+            testKey
+        );
+
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        return false;
+
+    }
+
+}
+
+
+storageAvailable =
+    testStorage();
+
+
+/* =========================================================
+   SAFE STORAGE
+========================================================= */
+
+function safeSet(
+    key,
+    value
+) {
+
+    if (!storageAvailable) {
+        return;
+    }
+
+
+    try {
+
+        localStorage.setItem(
+            key,
+            value
+        );
+
+    }
+
+    catch (error) {
+
+        storageAvailable = false;
+
+        showStatus(
+            "Phone storage is unavailable. " +
+            "The scheduler will work until this page is closed.",
+            "warning"
+        );
+
+    }
+
+}
+
+
+function safeGet(
+    key,
+    fallback
+) {
+
+    if (!storageAvailable) {
+
+        return fallback;
+
+    }
+
+
+    try {
+
+        const value =
+            localStorage.getItem(
+                key
+            );
+
+
+        if (
+            value === null
+        ) {
+
+            return fallback;
+
+        }
+
+
+        return value;
+
+    }
+
+    catch (error) {
+
+        storageAvailable = false;
+
+        return fallback;
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE DATA
+========================================================= */
+
+function saveData() {
+
+    safeSet("pb_players", JSON.stringify(players));
+    safeSet("pb_playerDatabase", JSON.stringify(playerDatabase));
+    safeSet("pb_schedule", JSON.stringify(schedule));
+    safeSet("pb_currentRound", String(currentRound));
+    safeSet("pb_playerJoinRound", JSON.stringify(playerJoinRound));
+    safeSet("pb_courtCount", String(courtCount));
+    safeSet("pb_hasSavedState", "1");
+    safeSet("pb_lastSaved", new Date().toISOString());
+
+    const autoSave = document.getElementById("autoSaveStatus");
+    if (autoSave && storageAvailable) {
+        const now = new Date();
+        autoSave.textContent =
+            "✓ Automatically saved " +
+            now.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}) +
+            (schedule.length ? " – Round " + currentRound : "");
+    }
+}
+
+
+
+/* =========================================================
+   LOAD DATA
+========================================================= */
+
+function loadData() {
+
+    /*
+       IMPORTANT: phone/browser storage is the live autosave and therefore
+       takes priority. The embedded HTML state is used only on a device/browser
+       that has never saved this scheduler before. This prevents an older HTML
+       snapshot from overwriting today's automatically saved tournament.
+    */
+    const hasLocalState = safeGet("pb_hasSavedState", "0") === "1" ||
+        safeGet("pb_players", null) !== null ||
+        safeGet("pb_schedule", null) !== null;
+
+    if (hasLocalState) {
+        try {
+            players = JSON.parse(safeGet("pb_players", "[]")) || [];
+            playerDatabase = JSON.parse(safeGet("pb_playerDatabase", "[]")) || [];
+            schedule = JSON.parse(safeGet("pb_schedule", "[]")) || [];
+            currentRound = parseInt(safeGet("pb_currentRound", "1"), 10) || 1;
+            playerJoinRound = JSON.parse(safeGet("pb_playerJoinRound", "{}")) || {};
+            courtCount = parseInt(safeGet("pb_courtCount", "0"), 10) || 0;
+
+            players.forEach(player => {
+                if (!playerJoinRound[player]) playerJoinRound[player] = 1;
+            });
+
+            if (courtCount < 1 && schedule.length > 0) {
+                const savedRound = schedule[Math.min(Math.max(currentRound - 1, 0), schedule.length - 1)];
+                courtCount = (savedRound && Array.isArray(savedRound.courts) && savedRound.courts.length)
+                    ? savedRound.courts.length : 2;
+            }
+            if (courtCount < 1) courtCount = 2;
+
+            const courtsInput = document.getElementById("courts");
+            if (courtsInput) courtsInput.value = courtCount;
+
+            renderAll();
+            const lastSaved = safeGet("pb_lastSaved", "");
+            const autoSave = document.getElementById("autoSaveStatus");
+            if (autoSave) {
+                autoSave.textContent = lastSaved
+                    ? "✓ Restored automatically saved tournament" + (schedule.length ? " – Round " + currentRound : "")
+                    : "✓ Automatic saving ready";
+            }
+            return;
+        } catch (error) {
+            /* If local data is damaged, fall back to the embedded HTML state. */
+        }
+    }
+
+    try {
+        const embeddedStateElement = document.getElementById("embeddedState");
+        const embeddedText = embeddedStateElement ? embeddedStateElement.textContent.trim() : "";
+        const embedded = embeddedText && embeddedText !== "null" ? JSON.parse(embeddedText) : null;
+
+        if (embedded) {
+            players = Array.isArray(embedded.players) ? embedded.players : [];
+            playerDatabase = Array.isArray(embedded.playerDatabase) ? embedded.playerDatabase : [];
+            schedule = Array.isArray(embedded.schedule) ? embedded.schedule : [];
+            currentRound = parseInt(embedded.currentRound, 10) || 1;
+            playerJoinRound = (embedded.playerJoinRound && typeof embedded.playerJoinRound === "object")
+                ? embedded.playerJoinRound : {};
+            courtCount = parseInt(embedded.courtCount, 10) || 2;
+            if (courtCount < 1) courtCount = 2;
+
+            players.forEach(player => {
+                if (!playerJoinRound[player]) playerJoinRound[player] = 1;
+            });
+
+            const courtsInput = document.getElementById("courts");
+            if (courtsInput) courtsInput.value = courtCount;
+
+            renderAll();
+            saveData();
+            return;
+        }
+    } catch (error) {
+        /* Continue with a safe blank start. */
+    }
+
+    players = [];
+    playerDatabase = [];
+    schedule = [];
+    currentRound = 1;
+    playerJoinRound = {};
+    courtCount = 2;
+    renderAll();
+    saveData();
+}
+
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(
+    value
+) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   ADD DATABASE PLAYER
+========================================================= */
+
+function addPlayerToDatabase() {
+
+    const input =
+        document.getElementById(
+            "newDatabasePlayer"
+        );
+
+
+    const name =
+        input.value.trim();
+
+
+    if (!name) {
+
+        alert(
+            "Please enter a player name."
+        );
+
+        return;
+
+    }
+
+
+    const exists =
+        playerDatabase.some(
+            player =>
+                player.toLowerCase() ===
+                name.toLowerCase()
+        );
+
+
+    if (exists) {
+
+        alert(
+            "That player is already in the database."
+        );
+
+        return;
+
+    }
+
+
+    playerDatabase.push(
+        name
+    );
+
+
+    playerDatabase.sort(
+        (a,b) =>
+            a.localeCompare(b)
+    );
+
+
+    input.value = "";
+
+
+    saveData();
+
+    renderPlayerDatabase();
+
+
+    showStatus(
+        name +
+        " has been saved to the player database.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   ADD DATABASE PLAYER TO TOURNAMENT
+========================================================= */
+
+function addDatabasePlayerToTournament(
+    name
+) {
+
+    const exists =
+        players.some(
+            player =>
+                player.toLowerCase() ===
+                name.toLowerCase()
+        );
+
+
+    if (exists) {
+
+        alert(
+            name +
+            " is already in this tournament."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        schedule.length === 0
+    ) {
+
+        players.push(
+            name
+        );
+
+        playerJoinRound[name] = 1;
+
+
+        saveData();
+
+        renderAll();
+
+
+        showStatus(
+            name +
+            " added to the tournament.",
+            "success"
+        );
+
+        return;
+
+    }
+
+
+    // Adding a player is intentionally immediate to speed up
+    // registration as players arrive. Completed rounds remain locked.
+    players.push(
+        name
+    );
+
+    /*
+       This player is a late arrival. They become eligible from the
+       current round, but receive fairness credit for earlier rounds
+       they were not present for. This prevents them from being treated
+       as if they had been unfairly benched before arriving.
+    */
+    playerJoinRound[name] = currentRound;
+
+
+    rebuildFutureSchedule();
+
+
+    saveData();
+
+    renderAll();
+
+
+    showStatus(
+        name +
+        " added. Completed rounds remain unchanged.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   DELETE DATABASE PLAYER
+========================================================= */
+
+function deletePlayerFromDatabase(
+    index
+) {
+
+    const name =
+        playerDatabase[index];
+
+
+    if (
+        name === undefined
+    ) {
+
+        return;
+
+    }
+
+
+    const answer =
+        confirm(
+            "Permanently delete " +
+            name +
+            " from the player database?\n\n" +
+
+            "This will NOT remove them from an existing tournament."
+        );
+
+
+    if (!answer) {
+        return;
+    }
+
+
+    playerDatabase.splice(
+        index,
+        1
+    );
+
+
+    saveData();
+
+    renderPlayerDatabase();
+
+
+    showStatus(
+        name +
+        " removed from the player database.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   RENDER DATABASE
+========================================================= */
+
+function renderPlayerDatabase() {
+
+    const div =
+        document.getElementById(
+            "databaseList"
+        );
+
+
+    const searchInput =
+        document.getElementById(
+            "databaseSearch"
+        );
+
+
+    const search =
+        searchInput
+        ? searchInput.value
+            .trim()
+            .toLowerCase()
+        : "";
+
+
+    const filtered =
+        playerDatabase.filter(
+            player =>
+                player
+                    .toLowerCase()
+                    .includes(search)
+        );
+
+
+    if (
+        playerDatabase.length === 0
+    ) {
+
+        div.innerHTML =
+            '<span class="small">' +
+            'No saved players yet.' +
+            '</span>';
+
+        return;
+
+    }
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+        div.innerHTML =
+            '<span class="small">' +
+            'No players match "' +
+            escapeHTML(search) +
+            '".' +
+            '</span>';
+
+        return;
+
+    }
+
+
+    div.innerHTML =
+        filtered.map(
+            player => {
+
+                const index =
+                    playerDatabase.indexOf(
+                        player
+                    );
+
+
+                const playing =
+                    players.some(
+                        p =>
+                            p.toLowerCase() ===
+                            player.toLowerCase()
+                    );
+
+
+                return `
+
+                    <div class="database-player">
+
+                        <span
+                            class="database-player-name">
+
+                            ${escapeHTML(player)}
+
+                        </span>
+
+
+                        <div
+                            class="database-actions">
+
+                            ${
+                                playing
+
+                                ?
+
+                                `
+                                <button
+                                    class="small-button grey"
+                                    disabled>
+
+                                    ✓ In Tournament
+
+                                </button>
+                                `
+
+                                :
+
+                                `
+                                <button
+                                    class="small-button"
+                                    onclick='addDatabasePlayerToTournament(
+                                        ${JSON.stringify(player)}
+                                    )'>
+
+                                    + Add
+
+                                </button>
+                                `
+                            }
+
+
+                            <button
+                                class="small-button red"
+                                onclick="deletePlayerFromDatabase(
+                                    ${index}
+                                )">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================================
+   CLEAR ALL TOURNAMENT PLAYERS
+========================================================= */
+
+function clearTournamentPlayers() {
+
+    // This button is intended for starting a new tournament day.
+    // Do not allow it to accidentally destroy a live schedule.
+    if (schedule.length > 0) {
+
+        alert(
+            "A schedule is currently active.\n\n" +
+            "Please use Reset Schedule first, then clear the tournament players."
+        );
+
+        return;
+
+    }
+
+    if (players.length === 0) {
+        showStatus(
+            "Tournament player list is already empty.",
+            "success"
+        );
+        return;
+    }
+
+    players = [];
+    playerJoinRound = {};
+    currentRound = 1;
+
+    saveData();
+    renderAll();
+
+    showStatus(
+        "All tournament players have been cleared. You can now add players as they arrive.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   REMOVE PLAYER
+========================================================= */
+
+function removePlayer(
+    index
+) {
+
+    if (
+        index < 0 ||
+        index >= players.length
+    ) {
+
+        return;
+
+    }
+
+
+    const player =
+        players[index];
+
+
+    if (
+        schedule.length === 0
+    ) {
+
+        players.splice(
+            index,
+            1
+        );
+
+
+        saveData();
+
+        renderAll();
+
+        return;
+
+    }
+
+
+    if (
+        players.length <= 4
+    ) {
+
+        alert(
+            "You must keep at least 4 active players."
+        );
+
+        return;
+
+    }
+
+
+    const answer =
+        confirm(
+            "Remove " +
+            player +
+            " from this tournament?\n\n" +
+
+            "They remain in the permanent Player Database.\n\n" +
+
+            "Completed rounds stay unchanged."
+        );
+
+
+    if (!answer) {
+        return;
+    }
+
+
+    players.splice(
+        index,
+        1
+    );
+
+    delete playerJoinRound[player];
+
+
+    rebuildFutureSchedule();
+
+
+    saveData();
+
+    renderAll();
+
+
+    showStatus(
+        player +
+        " removed. Completed rounds remain unchanged.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   RENDER PLAYERS
+========================================================= */
+
+function renderPlayers() {
+
+    const div =
+        document.getElementById(
+            "players"
+        );
+
+
+    const count =
+        document.getElementById(
+            "playerCount"
+        );
+
+
+    if (
+        players.length === 0
+    ) {
+
+        div.innerHTML =
+            '<span class="small">' +
+            'No players selected.' +
+            '</span>';
+
+        count.innerHTML = "";
+
+        return;
+
+    }
+
+
+    div.innerHTML =
+        [...players]
+            .sort((a,b) =>
+                a.localeCompare(
+                    b,
+                    undefined,
+                    { sensitivity: "base" }
+                )
+            )
+            .map(
+                player => {
+
+                    /* Find the player's original index so sorting the
+                       display does not affect the scheduler's player order. */
+                    const originalIndex =
+                        players.indexOf(player);
+
+                    return `
+
+                        <span class="player-tag">
+
+                            ${escapeHTML(player)}
+
+                            <span
+                                class="remove-player"
+                                onclick="removePlayer(
+                                    ${originalIndex}
+                                )">
+
+                                ×
+
+                            </span>
+
+                        </span>
+
+                    `;
+
+                }
+            ).join("");
+
+
+    count.textContent =
+        "Players in tournament: " +
+        players.length;
+
+}
+
+
+/* =========================================================
+   SHUFFLE
+========================================================= */
+
+function shuffle(
+    array
+) {
+
+    const a =
+        [...array];
+
+
+    for (
+        let i = a.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+
+        [
+            a[i],
+            a[j]
+        ] =
+        [
+            a[j],
+            a[i]
+        ];
+
+    }
+
+
+    return a;
+
+}
+
+
+/* =========================================================
+   PLAYER STATISTICS
+========================================================= */
+
+function ensurePlayerStats(
+    stats,
+    player
+) {
+
+    if (
+        !stats[player]
+    ) {
+
+        stats[player] = {
+
+            played: 0,
+
+            benched: 0,
+
+            partners: {},
+
+            opponents: {}
+
+        };
+
+    }
+
+}
+
+
+function addRelationship(
+    stats,
+    player,
+    other,
+    type
+) {
+
+    if (
+        !stats[player]
+    ) {
+
+        return;
+
+    }
+
+
+    stats[player][type][other] =
+        (
+            stats[player][type][other] ||
+            0
+        ) + 1;
+
+}
+
+
+function getRelationship(
+    stats,
+    player,
+    other,
+    type
+) {
+
+    if (
+        !stats[player] ||
+        !stats[player][type]
+    ) {
+
+        return 0;
+
+    }
+
+
+    return (
+        stats[player][type][other] ||
+        0
+    );
+
+}
+
+
+/* =========================================================
+   GET STATS
+========================================================= */
+
+function getStats() {
+
+    const stats = {};
+
+
+    players.forEach(
+        player =>
+            ensurePlayerStats(
+                stats,
+                player
+            )
+    );
+
+
+    schedule.forEach(
+        round => {
+
+            (round.played || [])
+                .forEach(
+                    player =>
+                        ensurePlayerStats(
+                            stats,
+                            player
+                        )
+                );
+
+
+            (round.bench || [])
+                .forEach(
+                    player =>
+                        ensurePlayerStats(
+                            stats,
+                            player
+                        )
+                );
+
+
+            (round.courts || [])
+                .forEach(
+                    court => {
+
+                        [
+                            ...(court.team1 || []),
+                            ...(court.team2 || [])
+                        ]
+                        .forEach(
+                            player =>
+                                ensurePlayerStats(
+                                    stats,
+                                    player
+                                )
+                        );
+
+                    }
+                );
+
+        }
+    );
+
+
+    schedule.forEach(
+        round => {
+
+            (round.played || [])
+                .forEach(
+                    player => {
+
+                        if (
+                            stats[player]
+                        ) {
+
+                            stats[player].played++;
+
+                        }
+
+                    }
+                );
+
+
+            (round.bench || [])
+                .forEach(
+                    player => {
+
+                        if (
+                            stats[player]
+                        ) {
+
+                            stats[player].benched++;
+
+                        }
+
+                    }
+                );
+
+
+            (round.courts || [])
+                .forEach(
+                    court => {
+
+                        const team1 =
+                            court.team1 || [];
+
+                        const team2 =
+                            court.team2 || [];
+
+
+                        if (
+                            team1.length === 2
+                        ) {
+
+                            addRelationship(
+                                stats,
+                                team1[0],
+                                team1[1],
+                                "partners"
+                            );
+
+                            addRelationship(
+                                stats,
+                                team1[1],
+                                team1[0],
+                                "partners"
+                            );
+
+                        }
+
+
+                        if (
+                            team2.length === 2
+                        ) {
+
+                            addRelationship(
+                                stats,
+                                team2[0],
+                                team2[1],
+                                "partners"
+                            );
+
+                            addRelationship(
+                                stats,
+                                team2[1],
+                                team2[0],
+                                "partners"
+                            );
+
+                        }
+
+
+                        team1.forEach(
+                            player => {
+
+                                team2.forEach(
+                                    opponent => {
+
+                                        addRelationship(
+                                            stats,
+                                            player,
+                                            opponent,
+                                            "opponents"
+                                        );
+
+                                        addRelationship(
+                                            stats,
+                                            opponent,
+                                            player,
+                                            "opponents"
+                                        );
+
+                                    }
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+        }
+    );
+
+
+    return stats;
+
+}
+
+
+/* =========================================================
+   DISPLAY STATS
+========================================================= */
+
+function renderStats() {
+
+    const div =
+        document.getElementById(
+            "stats"
+        );
+
+
+    const stats =
+        getStats();
+
+
+    if (
+        players.length === 0
+    ) {
+
+        div.innerHTML =
+            '<span class="small">' +
+            'Add players to see statistics.' +
+            '</span>';
+
+        return;
+
+    }
+
+
+    let html =
+        '<div class="table-wrapper">' +
+        '<table>' +
+
+        '<tr>' +
+
+        '<th>Player</th>' +
+
+        '<th>Games</th>' +
+
+        '<th>Benched</th>' +
+
+        '<th>Partners</th>' +
+
+        '<th>Opponents</th>' +
+
+        '</tr>';
+
+
+    [...players]
+        .sort((a,b) =>
+            a.localeCompare(
+                b,
+                undefined,
+                { sensitivity: "base" }
+            )
+        )
+        .forEach(
+            player => {
+
+            const s =
+                stats[player];
+
+
+            const partners =
+                Object.entries(
+                    s.partners
+                )
+                .map(
+                    ([name,count]) =>
+                        escapeHTML(name) +
+                        " (" +
+                        count +
+                        ")"
+                )
+                .join(", ");
+
+
+            const opponents =
+                Object.entries(
+                    s.opponents
+                )
+                .map(
+                    ([name,count]) =>
+                        escapeHTML(name) +
+                        " (" +
+                        count +
+                        ")"
+                )
+                .join(", ");
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(player)}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${s.played}
+                    </td>
+
+                    <td>
+                        ${s.benched}
+                    </td>
+
+                    <td>
+                        ${partners || "-"}
+                    </td>
+
+                    <td>
+                        ${opponents || "-"}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html +=
+        "</table></div>";
+
+
+    div.innerHTML =
+        html;
+
+}
+
+
+/* =========================================================
+   CREATE FAIR ROUND
+========================================================= */
+
+function createFairRound(
+    courtCount
+) {
+
+    const stats =
+        getStats();
+
+
+    /*
+       Every doubles court needs exactly 4 players.
+       Only complete courts are used, so the number playing
+       is always a multiple of four.
+    */
+    const availableSlots =
+        Math.floor(
+            Math.min(
+                players.length,
+                courtCount * 4
+            ) / 4
+        ) * 4;
+
+
+    let ranked =
+        [...players];
+
+
+    ranked.sort(
+        (a,b) => {
+
+            const A =
+                stats[a] ||
+                {
+                    played: 0,
+                    benched: 0
+                };
+
+
+            const B =
+                stats[b] ||
+                {
+                    played: 0,
+                    benched: 0
+                };
+
+
+            /*
+               Attendance-adjusted fairness:
+               A late player gets a virtual "played" credit for each
+               completed round before they arrived. Therefore a player
+               who arrived on time and has genuinely been benched keeps
+               priority for court time over the late arrival.
+            */
+            const missedBeforeArrivalA =
+                Math.max(
+                    0,
+                    (playerJoinRound[a] || 1) - 1
+                );
+
+            const missedBeforeArrivalB =
+                Math.max(
+                    0,
+                    (playerJoinRound[b] || 1) - 1
+                );
+
+            const effectivePlayedA =
+                A.played + missedBeforeArrivalA;
+
+            const effectivePlayedB =
+                B.played + missedBeforeArrivalB;
+
+
+            if (
+                effectivePlayedA !==
+                effectivePlayedB
+            ) {
+
+                return (
+                    effectivePlayedA -
+                    effectivePlayedB
+                );
+
+            }
+
+
+            if (
+                A.benched !==
+                B.benched
+            ) {
+
+                return (
+                    B.benched -
+                    A.benched
+                );
+
+            }
+
+
+            return (
+                Math.random() -
+                0.5
+            );
+
+        }
+    );
+
+
+    const selected =
+        ranked.slice(
+            0,
+            availableSlots
+        );
+
+
+    const bench =
+        ranked.slice(
+            availableSlots
+        );
+
+
+    const courts =
+        findBestCourtArrangement(
+            selected,
+            courtCount,
+            stats
+        );
+
+
+    return {
+
+        played:
+            selected,
+
+        bench:
+            bench,
+
+        courts:
+            courts
+
+    };
+
+}
+
+
+/* =========================================================
+   FIND BEST COURT ARRANGEMENT
+========================================================= */
+
+function findBestCourtArrangement(
+    selectedPlayers,
+    courtCount,
+    stats
+) {
+
+    let best = null;
+
+    let bestScore =
+        Infinity;
+
+
+    const attempts =
+        1200;
+
+
+    for (
+        let attempt = 0;
+        attempt < attempts;
+        attempt++
+    ) {
+
+        const shuffled =
+            shuffle(
+                selectedPlayers
+            );
+
+
+        const courts = [];
+
+        let index = 0;
+
+
+        for (
+            let c = 1;
+            c <= courtCount;
+            c++
+        ) {
+
+            if (
+                index + 4 <=
+                shuffled.length
+            ) {
+
+                courts.push({
+
+                    court: c,
+
+                    team1: [
+
+                        shuffled[index],
+
+                        shuffled[index + 1]
+
+                    ],
+
+                    team2: [
+
+                        shuffled[index + 2],
+
+                        shuffled[index + 3]
+
+                    ]
+
+                });
+
+
+                index += 4;
+
+            }
+
+        }
+
+
+        const score =
+            scoreArrangement(
+                courts,
+                stats
+            );
+
+
+        if (
+            score <
+            bestScore
+        ) {
+
+            bestScore =
+                score;
+
+            best =
+                courts;
+
+        }
+
+    }
+
+
+    return best || [];
+
+}
+
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+function scoreArrangement(
+    courts,
+    stats
+) {
+
+    /*
+       Priority order:
+       1. Avoid repeat partners wherever possible.
+       2. Then minimise repeat opponents.
+       3. Only then spread players as evenly as possible
+          across the numbered courts.
+    */
+
+    let partnerRepeats = 0;
+    let opponentRepeats = 0;
+    let courtImbalance = 0;
+
+    // Count how often each player has already used each court.
+    const courtHistory = {};
+
+    schedule.forEach(round => {
+        (round.courts || []).forEach(court => {
+            const courtNumber = court.court;
+            [...(court.team1 || []), ...(court.team2 || [])]
+                .forEach(player => {
+                    if (!courtHistory[player]) courtHistory[player] = {};
+                    courtHistory[player][courtNumber] =
+                        (courtHistory[player][courtNumber] || 0) + 1;
+                });
+        });
+    });
+
+    courts.forEach(court => {
+
+        const team1 = court.team1;
+        const team2 = court.team2;
+
+        partnerRepeats +=
+            getRelationship(stats, team1[0], team1[1], "partners");
+
+        partnerRepeats +=
+            getRelationship(stats, team2[0], team2[1], "partners");
+
+        team1.forEach(player => {
+            team2.forEach(opponent => {
+                opponentRepeats +=
+                    getRelationship(
+                        stats,
+                        player,
+                        opponent,
+                        "opponents"
+                    );
+            });
+        });
+
+        // Lower score when a player is placed on a court
+        // they have used less often.
+        [...team1, ...team2].forEach(player => {
+            courtImbalance +=
+                (courtHistory[player] &&
+                 courtHistory[player][court.court]) || 0;
+        });
+    });
+
+    /*
+       The weights deliberately create a strict priority:
+       a partner repeat outweighs any possible opponent or
+       court-balance improvement; opponent repeats outweigh
+       court balancing.
+    */
+    return (
+        partnerRepeats * 1000000 +
+        opponentRepeats * 1000 +
+        courtImbalance +
+        Math.random() * 0.01
+    );
+
+}
+
+
+/* =========================================================
+   GENERATE SCHEDULE
+========================================================= */
+
+function generateSchedule() {
+
+    if (
+        players.length < 4
+    ) {
+
+        alert(
+            "You need at least 4 players."
+        );
+
+        return;
+
+    }
+
+
+    const requestedCourts =
+        parseInt(
+            document.getElementById(
+                "courts"
+            ).value,
+            10
+        );
+
+
+    const rounds =
+        parseInt(
+            document.getElementById(
+                "rounds"
+            ).value,
+            10
+        );
+
+
+    if (
+        !requestedCourts ||
+        requestedCourts < 1 ||
+        !rounds ||
+        rounds < 1
+    ) {
+
+        alert(
+            "Please enter valid court and round numbers."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        schedule.length > 0
+    ) {
+
+        const answer =
+            confirm(
+                "This will replace the existing schedule. " +
+                "All current completed rounds will be lost. Continue?"
+            );
+
+
+        if (!answer) {
+            return;
+        }
+
+    }
+
+
+    const maximumUsableCourts =
+        Math.floor(players.length / 4);
+
+    /* Never silently change the number the user entered.
+       If there are not enough players for that many full
+       doubles courts, tell the user instead of reverting
+       the input to the previous court count. */
+    if (requestedCourts > maximumUsableCourts) {
+
+        alert(
+            "You entered " +
+            requestedCourts +
+            " courts, but there are only " +
+            players.length +
+            " players.\n\n" +
+            "You need 4 players per court.\n" +
+            "The maximum with the current players is " +
+            maximumUsableCourts +
+            " court" +
+            (maximumUsableCourts === 1 ? "" : "s") +
+            ".\n\n" +
+            "The Courts box has NOT been changed."
+        );
+
+        return;
+    }
+
+    courtCount = requestedCourts;
+
+    schedule = [];
+
+    currentRound = 1;
+
+    playerJoinRound = {};
+    players.forEach(player => {
+        playerJoinRound[player] = 1;
+    });
+
+
+    for (
+        let r = 0;
+        r < rounds;
+        r++
+    ) {
+
+        schedule.push(
+            createFairRound(
+                courtCount
+            )
+        );
+
+    }
+
+
+    saveData();
+
+    renderAll();
+
+
+    showStatus(
+        "New schedule created successfully.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   REBUILD FUTURE
+========================================================= */
+
+function rebuildFutureSchedule() {
+
+    if (
+        schedule.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const totalRounds =
+        schedule.length;
+
+
+    const completedRounds =
+        Math.max(
+            0,
+            currentRound - 1
+        );
+
+
+    const roundsToRebuild =
+        Math.max(
+            0,
+            totalRounds -
+            completedRounds
+        );
+
+
+    schedule =
+        schedule.slice(
+            0,
+            completedRounds
+        );
+
+
+    if (
+        !courtCount ||
+        courtCount < 1
+    ) {
+
+        courtCount = 1;
+
+    }
+
+    /* Do not create a partial doubles court. */
+    courtCount =
+        Math.max(
+            1,
+            Math.min(
+                courtCount,
+                Math.floor(players.length / 4)
+            )
+        );
+
+    document.getElementById(
+        "courts"
+    ).value = courtCount;
+
+
+    for (
+        let i = 0;
+        i < roundsToRebuild;
+        i++
+    ) {
+
+        schedule.push(
+            createFairRound(
+                courtCount
+            )
+        );
+
+    }
+
+
+    if (
+        schedule.length === 0
+    ) {
+
+        currentRound = 1;
+
+    }
+
+
+    else if (
+        currentRound >
+        schedule.length
+    ) {
+
+        currentRound =
+            schedule.length;
+
+    }
+
+}
+
+
+/* =========================================================
+   CHANGE NUMBER OF COURTS DURING TOURNAMENT
+========================================================= */
+
+function changeCourtCount() {
+
+    if (
+        schedule.length === 0
+    ) {
+
+        alert(
+            "Generate the initial schedule first."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        players.length < 4
+    ) {
+
+        alert(
+            "You need at least 4 players."
+        );
+
+        return;
+
+    }
+
+
+    const requestedCourts =
+        parseInt(
+            document.getElementById(
+                "courts"
+            ).value,
+            10
+        );
+
+
+    if (
+        !requestedCourts ||
+        requestedCourts < 1
+    ) {
+
+        alert(
+            "Please enter a valid number of courts."
+        );
+
+        document.getElementById(
+            "courts"
+        ).value = courtCount;
+
+        return;
+
+    }
+
+
+    const maximumUsableCourts =
+        Math.floor(
+            players.length / 4
+        );
+
+    if (requestedCourts > maximumUsableCourts) {
+
+        alert(
+            "You entered " +
+            requestedCourts +
+            " courts, but there are only " +
+            players.length +
+            " players.\n\n" +
+            "You need 4 players per court.\n" +
+            "The maximum with the current players is " +
+            maximumUsableCourts +
+            " court" +
+            (maximumUsableCourts === 1 ? "" : "s") +
+            ".\n\n" +
+            "The Courts box has NOT been changed."
+        );
+
+        return;
+    }
+
+    const newCourtCount = requestedCourts;
+
+
+    if (
+        newCourtCount === courtCount
+    ) {
+
+        document.getElementById(
+            "courts"
+        ).value = courtCount;
+
+        showStatus(
+            "The number of courts is already " +
+            courtCount + ".",
+            "info"
+        );
+
+        return;
+
+    }
+
+
+    const answer =
+        confirm(
+            "Change from " +
+            courtCount +
+            " court" +
+            (courtCount === 1 ? "" : "s") +
+            " to " +
+            newCourtCount +
+            " court" +
+            (newCourtCount === 1 ? "" : "s") +
+            "?\n\n" +
+            "Completed rounds will remain unchanged.\n" +
+            "The current round and all future rounds will be regenerated.\n" +
+            "Player playing and bench time will be rebalanced fairly."
+        );
+
+
+    if (!answer) {
+
+        document.getElementById(
+            "courts"
+        ).value = courtCount;
+
+        return;
+
+    }
+
+
+    courtCount = newCourtCount;
+
+    document.getElementById(
+        "courts"
+    ).value = courtCount;
+
+
+    rebuildFutureSchedule();
+
+    saveData();
+
+    renderAll();
+
+
+    let message =
+        "Court count changed to " +
+        courtCount +
+        ". Completed rounds remain unchanged.";
+
+    if (
+        requestedCourts >
+        maximumUsableCourts
+    ) {
+
+        message +=
+            " With " +
+            players.length +
+            " players, a maximum of " +
+            maximumUsableCourts +
+            " full doubles courts can be used.";
+
+    }
+
+
+    showStatus(
+        message,
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   ADD EXTRA ROUNDS
+========================================================= */
+
+function addExtraRounds() {
+
+    if (
+        schedule.length === 0
+    ) {
+
+        alert(
+            "Generate the initial schedule first."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        players.length < 4
+    ) {
+
+        alert(
+            "You need at least 4 players."
+        );
+
+        return;
+
+    }
+
+
+    const extra =
+        parseInt(
+            document.getElementById(
+                "extraRounds"
+            ).value,
+            10
+        );
+
+
+    /* Always use the CURRENT court number shown in
+       the Courts box. This prevents Add Extra Rounds
+       from reverting to the previous court count. */
+    const requestedCourts =
+        parseInt(
+            document.getElementById(
+                "courts"
+            ).value,
+            10
+        );
+
+    const maximumUsableCourts =
+        Math.floor(
+            players.length / 4
+        );
+
+    if (
+        !requestedCourts ||
+        requestedCourts < 1
+    ) {
+        alert(
+            "Please enter a valid number of courts."
+        );
+
+        document.getElementById(
+            "courts"
+        ).value = courtCount;
+
+        return;
+    }
+
+    courtCount =
+        Math.max(
+            1,
+            Math.min(
+                requestedCourts,
+                maximumUsableCourts
+            )
+        );
+
+    document.getElementById(
+        "courts"
+    ).value = courtCount;
+
+
+    if (
+        !extra ||
+        extra < 1
+    ) {
+
+        alert(
+            "Please enter how many extra rounds you want."
+        );
+
+        return;
+
+    }
+
+
+    for (
+        let i = 0;
+        i < extra;
+        i++
+    ) {
+
+        schedule.push(
+            createFairRound(
+                courtCount
+            )
+        );
+
+    }
+
+
+    saveData();
+
+    renderAll();
+
+
+    showStatus(
+        extra +
+        " extra round" +
+        (
+            extra === 1
+            ? ""
+            : "s"
+        ) +
+        " added.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   REMOVE UPCOMING ROUNDS
+========================================================= */
+
+function removeUpcomingRounds() {
+
+    if (schedule.length === 0) {
+
+        alert(
+            "Generate the initial schedule first."
+        );
+
+        return;
+    }
+
+    const input =
+        document.getElementById("removeRounds");
+
+    const amount =
+        parseInt(input.value, 10);
+
+    const futureRounds =
+        Math.max(0, schedule.length - currentRound);
+
+    if (!amount || amount < 1) {
+
+        alert(
+            "Please enter how many upcoming rounds you want to remove."
+        );
+
+        return;
+    }
+
+    if (futureRounds === 0) {
+
+        alert(
+            "There are no upcoming rounds to remove. The current round is kept."
+        );
+
+        return;
+    }
+
+    if (amount > futureRounds) {
+
+        alert(
+            "You can remove a maximum of " +
+            futureRounds +
+            " upcoming round" +
+            (futureRounds === 1 ? "" : "s") +
+            ". The current round and completed rounds cannot be removed."
+        );
+
+        return;
+    }
+
+    const firstRemovedRound =
+        schedule.length - amount + 1;
+
+    const lastRemovedRound =
+        schedule.length;
+
+    const answer =
+        confirm(
+            "Remove Rounds " +
+            firstRemovedRound +
+            " to " +
+            lastRemovedRound +
+            "?\n\n" +
+            "Completed rounds and the current round will remain unchanged."
+        );
+
+    if (!answer) {
+        return;
+    }
+
+    schedule.splice(
+        schedule.length - amount,
+        amount
+    );
+
+    saveData();
+    renderAll();
+
+    showStatus(
+        amount +
+        " upcoming round" +
+        (amount === 1 ? "" : "s") +
+        " removed. Completed rounds remain unchanged.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   RENDER SCHEDULE
+========================================================= */
+
+function renderSchedule() {
+
+    const div =
+        document.getElementById(
+            "schedule"
+        );
+
+
+    if (
+        schedule.length === 0
+    ) {
+
+        div.innerHTML =
+            '<p class="small">' +
+            'No schedule created yet.' +
+            '</p>';
+
+        return;
+
+    }
+
+
+    let html = "";
+
+
+    schedule.forEach(
+        (round,index) => {
+
+            const number =
+                index + 1;
+
+
+            let className;
+
+
+            if (
+                number <
+                currentRound
+            ) {
+
+                className =
+                    "completed";
+
+            }
+
+            else if (
+                number ===
+                currentRound
+            ) {
+
+                className =
+                    "current";
+
+            }
+
+            else {
+
+                className =
+                    "future";
+
+            }
+
+
+            html += `
+
+                <div
+                    class="round ${className}"
+                    id="round-${number}">
+
+                    <div class="round-title">
+
+                        <h3>
+                            Round ${number}
+                        </h3>
+
+                        <strong>
+
+                            ${
+                                number <
+                                currentRound
+
+                                ? "✓ Completed"
+
+                                : number ===
+                                  currentRound
+
+                                ? "▶ Current"
+
+                                : "Upcoming"
+
+                            }
+
+                        </strong>
+
+                    </div>
+
+            `;
+
+
+            (
+                round.courts ||
+                []
+            )
+            .forEach(
+                court => {
+
+                    html += `
+
+                        <div class="court">
+
+                            <strong>
+                                Court ${court.court}
+                            </strong>
+
+                            <br>
+
+                            <span class="team">
+
+                                ${escapeHTML(
+                                    court.team1[0]
+                                )}
+
+                                &
+
+                                ${escapeHTML(
+                                    court.team1[1]
+                                )}
+
+                            </span>
+
+                            <span class="vs">
+                                VS
+                            </span>
+
+                            <span class="team">
+
+                                ${escapeHTML(
+                                    court.team2[0]
+                                )}
+
+                                &
+
+                                ${escapeHTML(
+                                    court.team2[1]
+                                )}
+
+                            </span>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            if (
+                (
+                    round.bench ||
+                    []
+                ).length > 0
+            ) {
+
+                html += `
+
+                    <div class="bench">
+
+                        <strong>
+                            🪑 Bench:
+                        </strong>
+
+                        ${
+                            round.bench
+                                .map(escapeHTML)
+                                .join(", ")
+                        }
+
+                    </div>
+
+                `;
+
+            }
+
+
+            html += `
+
+                <details>
+
+                    <summary>
+                        Round statistics
+                    </summary>
+
+                    <p class="small">
+
+                        Playing:
+
+                        ${
+                            (
+                                round.played ||
+                                []
+                            )
+                            .map(escapeHTML)
+                            .join(", ")
+                        }
+
+                        <br>
+
+                        Benched:
+
+                        ${
+                            (
+                                round.bench ||
+                                []
+                            )
+                            .map(escapeHTML)
+                            .join(", ")
+                            ||
+                            "Nobody"
+                        }
+
+                    </p>
+
+                </details>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    div.innerHTML =
+        html;
+
+}
+
+
+/* =========================================================
+   NEXT ROUND
+========================================================= */
+
+function nextRound() {
+
+    if (
+        schedule.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        currentRound <
+        schedule.length
+    ) {
+
+        currentRound++;
+
+
+        saveData();
+
+        renderSchedule();
+
+
+        const element =
+            document.getElementById(
+                "round-" +
+                currentRound
+            );
+
+
+        if (element) {
+
+            element.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
+
+
+        showStatus(
+            "Now on Round " +
+            currentRound +
+            ". Round " +
+            (
+                currentRound - 1
+            ) +
+            " is locked.",
+            "success"
+        );
+
+    }
+
+    else {
+
+        alert(
+            "You are already on the final round. " +
+            "Add extra rounds if required."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   PREVIOUS ROUND
+========================================================= */
+
+function previousRound() {
+
+    if (
+        currentRound > 1
+    ) {
+
+        currentRound--;
+
+        saveData();
+
+        renderSchedule();
+
+        goToCurrentRound();
+
+    }
+
+}
+
+
+/* =========================================================
+   CURRENT ROUND
+========================================================= */
+
+function goToCurrentRound() {
+
+    const element =
+        document.getElementById(
+            "round-" +
+            currentRound
+        );
+
+
+    if (element) {
+
+        element.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   UNDO LAST ROUND
+========================================================= */
+
+function undoLastRound() {
+
+    if (
+        schedule.length === 0
+    ) {
+
+        alert(
+            "There are no rounds to remove."
+        );
+
+        return;
+
+    }
+
+
+    const lastRound =
+        schedule.length;
+
+
+    const answer =
+        confirm(
+            "Remove Round " +
+            lastRound +
+            "?"
+        );
+
+
+    if (!answer) {
+        return;
+    }
+
+
+    schedule.pop();
+
+
+    if (
+        currentRound >
+        schedule.length
+    ) {
+
+        currentRound =
+            Math.max(
+                1,
+                schedule.length
+            );
+
+    }
+
+
+    saveData();
+
+    renderAll();
+
+
+    showStatus(
+        "Round " +
+        lastRound +
+        " removed.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function startNewTournament() {
+
+    const answer = confirm(
+        "Start a new tournament?\n\n" +
+        "This clears the current tournament players, schedule and statistics. " +
+        "Your permanent Player Database will be kept."
+    );
+
+    if (!answer) return;
+
+    players = [];
+    schedule = [];
+    currentRound = 1;
+    playerJoinRound = {};
+
+    const courtsInput = document.getElementById("courts");
+    courtCount = parseInt(courtsInput ? courtsInput.value : courtCount, 10) || 2;
+
+    saveData();
+    renderAll();
+    showStatus(
+        "New tournament ready. Player Database kept. Add players as they arrive, then generate the schedule.",
+        "success"
+    );
+}
+
+
+function resetSchedule() {
+
+    const answer =
+        confirm(
+            "This will delete the complete tournament schedule " +
+            "but keep your permanent Player Database. Continue?"
+        );
+
+
+    if (!answer) {
+        return;
+    }
+
+
+    schedule = [];
+
+    currentRound = 1;
+
+    playerJoinRound = {};
+    players.forEach(player => {
+        playerJoinRound[player] = 1;
+    });
+
+
+    saveData();
+
+    renderAll();
+
+
+    showStatus(
+        "Schedule reset. Player Database has been kept.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function showStatus(
+    message,
+    type
+) {
+
+    const div =
+        document.getElementById(
+            "status"
+        );
+
+
+    div.innerHTML =
+
+        `<div class="${type}">
+            ${escapeHTML(message)}
+        </div>`;
+
+
+    setTimeout(
+        () => {
+
+            div.innerHTML = "";
+
+        },
+        5000
+    );
+
+}
+
+
+/* =========================================================
+   FILE DOWNLOAD
+========================================================= */
+
+function downloadFile(
+    content,
+    filename,
+    type
+) {
+
+    try {
+
+        const blob =
+            new Blob(
+                [content],
+                {
+                    type:
+                        type
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        link.href =
+            url;
+
+
+        link.download =
+            filename;
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+
+        link.remove();
+
+
+        setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+            },
+            1500
+        );
+
+    }
+
+    catch (error) {
+
+        alert(
+            "The phone browser blocked the file download. " +
+            "Try opening the scheduler from a normal web page in Chrome."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CSV EXPORT
+========================================================= */
+
+function csvEscape(
+    value
+) {
+
+    return '"' +
+        String(value)
+        .replace(
+            /"/g,
+            '""'
+        ) +
+        '"';
+
+}
+
+
+function exportCSV() {
+
+    if (
+        schedule.length === 0
+    ) {
+
+        alert(
+            "There is no schedule to export."
+        );
+
+        return;
+
+    }
+
+
+    let csv =
+        "Round,Court,Team 1,Team 2,Bench\n";
+
+
+    schedule.forEach(
+        (round,index) => {
+
+            (
+                round.courts ||
+                []
+            )
+            .forEach(
+                court => {
+
+                    csv +=
+
+                        csvEscape(
+                            index + 1
+                        ) +
+
+                        "," +
+
+                        csvEscape(
+                            court.court
+                        ) +
+
+                        "," +
+
+                        csvEscape(
+                            court.team1.join(
+                                " & "
+                            )
+                        ) +
+
+                        "," +
+
+                        csvEscape(
+                            court.team2.join(
+                                " & "
+                            )
+                        ) +
+
+                        "," +
+
+                        csvEscape(
+                            (
+                                round.bench ||
+                                []
+                            )
+                            .join(
+                                " & "
+                            )
+                        ) +
+
+                        "\n";
+
+                }
+            );
+
+        }
+    );
+
+
+    csv +=
+        "\n\n";
+
+
+    csv +=
+        "Player,Games Played,Times Benched\n";
+
+
+    const stats =
+        getStats();
+
+
+    players.forEach(
+        player => {
+
+            csv +=
+
+                csvEscape(
+                    player
+                ) +
+
+                "," +
+
+                csvEscape(
+                    stats[player].played
+                ) +
+
+                "," +
+
+                csvEscape(
+                    stats[player].benched
+                ) +
+
+                "\n";
+
+        }
+    );
+
+
+    downloadFile(
+        csv,
+        "pickleball_schedule.csv",
+        "text/csv;charset=utf-8"
+    );
+
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+function printSchedule() {
+
+    window.print();
+
+}
+
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+function saveUpdatedHTML() {
+
+    const state = {
+
+        version: 6,
+
+        players: players,
+
+        playerDatabase: playerDatabase,
+
+        schedule: schedule,
+
+        currentRound: currentRound,
+
+        playerJoinRound: playerJoinRound,
+
+        courtCount: courtCount,
+
+        savedAt: new Date().toISOString()
+
+    };
+
+    const stateElement =
+        document.getElementById("embeddedState");
+
+    if (!stateElement) {
+
+        alert(
+            "The embedded save area could not be found."
+        );
+
+        return;
+    }
+
+    /* Escape < so a player name can never accidentally close the script tag. */
+    stateElement.textContent =
+        JSON.stringify(state, null, 2)
+            .replace(/</g, "\\u003c");
+
+    const html =
+        "<!DOCTYPE html>\n" +
+        document.documentElement.outerHTML;
+
+    const dateStamp =
+        new Date().toISOString()
+            .slice(0, 10);
+
+    downloadFile(
+        html,
+        "Pickleball_Scheduler_Updated_" + dateStamp + ".html",
+        "text/html;charset=utf-8"
+    );
+
+    showStatus(
+        schedule.length
+            ? "Updated HTML saved with the current tournament."
+            : "Blank-start HTML saved with your permanent Player Database.",
+        "success"
+    );
+
+}
+
+
+function downloadBackup() {
+
+    const backup = {
+
+        version: 4,
+
+        players:
+            players,
+
+        playerDatabase:
+            playerDatabase,
+
+        schedule:
+            schedule,
+
+        currentRound:
+            currentRound,
+
+        playerJoinRound:
+            playerJoinRound,
+
+        courtCount:
+            courtCount,
+
+        exportedAt:
+            new Date().toISOString()
+
+    };
+
+
+    downloadFile(
+
+        JSON.stringify(
+            backup,
+            null,
+            2
+        ),
+
+        "pickleball_backup.json",
+
+        "application/json"
+
+    );
+
+}
+
+
+/* =========================================================
+   RESTORE
+========================================================= */
+
+function restoreBackup(
+    event
+) {
+
+    const file =
+        event.target.files[0];
+
+
+    if (!file) {
+        return;
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e) {
+
+            try {
+
+                const backup =
+                    JSON.parse(
+                        e.target.result
+                    );
+
+
+                if (
+                    !Array.isArray(
+                        backup.players
+                    ) ||
+
+                    !Array.isArray(
+                        backup.schedule
+                    )
+                ) {
+
+                    throw new Error(
+                        "Invalid backup"
+                    );
+
+                }
+
+
+                const answer =
+                    confirm(
+                        "Restore this backup?\n\n" +
+
+                        "Your current tournament, " +
+                        "schedule and player database " +
+                        "will be replaced."
+                    );
+
+
+                if (!answer) {
+                    return;
+                }
+
+
+                players =
+                    backup.players;
+
+
+                schedule =
+                    backup.schedule;
+
+
+                currentRound =
+                    parseInt(
+                        backup.currentRound,
+                        10
+                    ) || 1;
+
+                playerJoinRound =
+                    (backup.playerJoinRound &&
+                     typeof backup.playerJoinRound === "object")
+                    ? backup.playerJoinRound
+                    : {};
+
+                players.forEach(player => {
+                    if (!playerJoinRound[player]) {
+                        playerJoinRound[player] = 1;
+                    }
+                });
+
+                courtCount =
+                    parseInt(
+                        backup.courtCount,
+                        10
+                    ) || 0;
+
+                if (
+                    courtCount < 1 &&
+                    schedule.length > 0
+                ) {
+                    const restoredRound =
+                        schedule[
+                            Math.min(
+                                Math.max(currentRound - 1, 0),
+                                schedule.length - 1
+                            )
+                        ];
+
+                    courtCount =
+                        (
+                            restoredRound &&
+                            Array.isArray(restoredRound.courts) &&
+                            restoredRound.courts.length > 0
+                        )
+                        ? restoredRound.courts.length
+                        : 1;
+                }
+
+                if (courtCount < 1) {
+                    courtCount = 2;
+                }
+
+                document.getElementById(
+                    "courts"
+                ).value = courtCount;
+
+
+                if (
+                    Array.isArray(
+                        backup.playerDatabase
+                    )
+                ) {
+
+                    playerDatabase =
+                        backup.playerDatabase;
+
+                }
+
+                else {
+
+                    playerDatabase =
+                        [...players];
+
+                }
+
+
+                saveData();
+
+                renderAll();
+
+
+                showStatus(
+                    "Backup restored successfully.",
+                    "success"
+                );
+
+            }
+
+            catch (error) {
+
+                alert(
+                    "Could not restore this backup file."
+                );
+
+            }
+
+            finally {
+
+                event.target.value = "";
+
+            }
+
+        };
+
+
+    reader.readAsText(
+        file
+    );
+
+}
+
+
+/* =========================================================
+   RENDER EVERYTHING
+========================================================= */
+
+function renderAll() {
+
+    renderPlayerDatabase();
+
+    renderPlayers();
+
+    renderStats();
+
+    renderSchedule();
+
+}
+
+
+/* =========================================================
+   ENTER KEY FOR NEW PLAYER
+========================================================= */
+
+document
+    .getElementById(
+        "newDatabasePlayer"
+    )
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key ===
+                "Enter"
+            ) {
+
+                addPlayerToDatabase();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   EXTRA MOBILE AUTOSAVE PROTECTION
+========================================================= */
+
+window.addEventListener("pagehide", function() {
+    saveData();
+});
+
+window.addEventListener("beforeunload", function() {
+    saveData();
+});
+
+document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "hidden") {
+        saveData();
+    }
+});
+
+
+/* =========================================================
+   START APPLICATION
+========================================================= */
+
+loadData();
+
+</script>
+
+
+
+
+</body></html>
